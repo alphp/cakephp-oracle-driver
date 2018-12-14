@@ -192,7 +192,9 @@ WHERE 1=1 " . ($useOwner ? $ownerCondition : '') . $objectCondition . " ORDER BY
             case 'INTEGER':
             case 'PLS_INTEGER':
             case 'BINARY_INTEGER':
-                if ($row['data_precision'] == 1) {
+                if ($row['data_precision'] == null) {
+                    $field = ['type' => 'decimal', 'length' => $row['char_length']];
+                } elseif ($row['data_precision'] == 1) {
                     $field = [
                         'type' => 'boolean',
                         'length' => null
