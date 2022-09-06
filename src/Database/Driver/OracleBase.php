@@ -387,6 +387,7 @@ abstract class OracleBase extends Driver
      */
     protected function _autoincrementSequenceId(?string $table, ?string $column, ?string $schema)
     {
+        $schemaExists = isset($schema);
         if ($this->isAutoQuotingEnabled()) {
             $tableName = $table;
             $columnName = $column;
@@ -396,7 +397,7 @@ abstract class OracleBase extends Driver
             $schema = strtoupper($schema);
         }
         
-        if (isset($schema)) {
+        if ($schemaExists) {
             $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName' and owner='$schema'";
         } else {
             $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName'";
@@ -407,7 +408,7 @@ abstract class OracleBase extends Driver
 
         $sequenceName = $result[0];
 
-        if (isset($schema)) {
+        if ($schemaExists) {
             $statement = $this->_connection->query("SELECT {$schema}.{$sequenceName}.CURRVAL FROM DUAL");
         } else {
             $statement = $this->_connection->query("SELECT {$sequenceName}.CURRVAL FROM DUAL");
