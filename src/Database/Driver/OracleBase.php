@@ -291,6 +291,10 @@ abstract class OracleBase extends Driver
     public function lastInsertId(?string $table = null, ?string $column = null)
     {
         [$schema, $table] = explode('.', $table);
+        if (!isset($table)) {
+            $table = $schema;
+            $schema = null;
+        }
         if ($this->useAutoincrement()) {
             return $this->_autoincrementSequenceId($table, $column, $schema);
         } else {
@@ -299,7 +303,7 @@ abstract class OracleBase extends Driver
             $statement = $this->_connection->query("SELECT {$sequenceName}.CURRVAL FROM DUAL");
             $result = $statement->fetch(PDO::FETCH_NUM);
             if (count($result) === 0) {
-                return $this->_autoincrementSequenceId($table, $column);
+                return $this->_autoincrementSequenceId($table, $column, $schema);
             }
 
             return $result[0];
@@ -389,15 +393,25 @@ abstract class OracleBase extends Driver
         } else {
             $tableName = strtoupper($table);
             $columnName = strtoupper($column);
+            $schema = strtoupper($schema);
         }
-        $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName'";
+        
+        if (isset($schema)) {
+            $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName' and owner='$schema'";
+        } else {
+            $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName'";
+        }
         $this->connect();
         $seqStatement = $this->_connection->query($query);
         $result = $seqStatement->fetch(PDO::FETCH_NUM);
 
         $sequenceName = $result[0];
 
-        $statement = $this->_connection->query("SELECT {$schema}.{$sequenceName}.CURRVAL FROM DUAL");
+        if (isset($schema)) {
+            $statement = $this->_connection->query("SELECT {$schema}.{$sequenceName}.CURRVAL FROM DUAL");
+        } else {
+            $statement = $this->_connection->query("SELECT {$sequenceName}.CURRVAL FROM DUAL");
+        }
         $result = $statement->fetch(PDO::FETCH_NUM);
 
         return $result[0];
