@@ -387,32 +387,23 @@ abstract class OracleBase extends Driver
      */
     protected function _autoincrementSequenceId(?string $table, ?string $column, ?string $schema)
     {
-        $schemaExists = isset($schema);
         if ($this->isAutoQuotingEnabled()) {
             $tableName = $table;
             $columnName = $column;
+            $schemaName = $schema;
         } else {
             $tableName = strtoupper($table);
             $columnName = strtoupper($column);
-            $schema = strtoupper($schema);
+            $schemaName = strtoupper($schema);
         }
-        
-        if ($schemaExists) {
-            $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName' and owner='$schema'";
-        } else {
-            $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName'";
-        }
+        $query = "select sequence_name from all_tab_identity_cols where table_name='$tableName' and column_name='$columnName'".(isset($schemaName) ? " and owner='$schemaName'" : "");
         $this->connect();
         $seqStatement = $this->_connection->query($query);
         $result = $seqStatement->fetch(PDO::FETCH_NUM);
 
         $sequenceName = $result[0];
 
-        if ($schemaExists) {
-            $statement = $this->_connection->query("SELECT {$schema}.{$sequenceName}.CURRVAL FROM DUAL");
-        } else {
-            $statement = $this->_connection->query("SELECT {$sequenceName}.CURRVAL FROM DUAL");
-        }
+        $statement = $this->_connection->query("SELECT ".(isset($schemaName) ? "{$schemaName}." : "")."{$sequenceName}.CURRVAL FROM DUAL");
         $result = $statement->fetch(PDO::FETCH_NUM);
 
         return $result[0];
