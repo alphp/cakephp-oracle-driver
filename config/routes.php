@@ -9,8 +9,9 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
-use Cake\Routing\Router;
+use Cake\Routing\Route\DashedRoute;
+use Cake\Routing\RouteBuilder;
 
-Router::plugin('OracleDriver', function ($routes) {
-    $routes->fallbacks('DashedRoute');
+$routes->plugin('OracleDriver', function (RouteBuilder $routes) {
+    $routes->fallbacks(DashedRoute::class);
 });
