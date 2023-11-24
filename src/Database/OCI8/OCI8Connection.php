@@ -12,8 +12,9 @@ declare(strict_types=1);
  */
 namespace CakeDC\OracleDriver\Database\OCI8;
 
-use Cake\Core\InstanceConfigTrait;
 use PDO;
+use Cake\Core\InstanceConfigTrait;
+use PDOStatement;
 
 /**
  * OCI8 implementation of the Connection interface.
@@ -127,7 +128,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    public function query($statement, $mode = PDO::ATTR_DEFAULT_FETCH_MODE, $arg3 = null, array $ctorargs = [])
+    public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
     {
         $args = func_get_args();
         $sql = $args[0];

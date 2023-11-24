@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 namespace CakeDC\OracleDriver\Database\OCI8;
 
+use Iterator;
 use PDO;
 
 /**
@@ -259,7 +260,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): Iterator
     {
         $data = $this->fetchAll();
 
@@ -400,17 +401,17 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function fetchAll($fetchMode = null, $className = null, $arguments = null)
+    //public function fetchAll(int $fetchMode = PDO::FETCH_DEFAULT, $className = null, $arguments = null): array
+    public function fetchAll(int $fetchMode = PDO::FETCH_DEFAULT, mixed ...$arguments): array
     {
-        $fetchArgument = $className;
-        $this->setFetchMode($fetchMode, $fetchArgument, $arguments);
+        $this->setFetchMode($fetchMode, ...$arguments);
 
         $this->_results = [];
         while ($row = $this->fetch()) {
             if (is_resource(reset($row))) {
                 $stmt = new OCI8Statement($this->_dbh, reset($row), $this->_conn);
                 $stmt->execute();
-                $stmt->setFetchMode($fetchMode, $fetchArgument, $arguments);
+                $stmt->setFetchMode($fetchMode, ...$arguments);
                 while ($rs = $stmt->fetch()) {
                     $this->_results[] = $rs;
                 }
@@ -468,9 +469,11 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * @throws \CakeDC\OracleDriver\Database\OCI8\Oci8Exception
      * @return bool TRUE on success or FALSE on failure.
      */
-    public function setFetchMode($fetchMode, $param = null, $arguments = [])
+    //public function setFetchMode($fetchMode, $param = null, $arguments = [])
+    public function setFetchMode(int $fetchMode, mixed ...$arguments)
     {
         $this->_defaultFetchMode = $fetchMode;
+        $param = array_shift($arguments);
 
         switch ($fetchMode) {
             case PDO::FETCH_ASSOC:
