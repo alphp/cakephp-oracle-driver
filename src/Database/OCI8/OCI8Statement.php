@@ -150,6 +150,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function bindValue($param, $value, $type = null)
     {
         $this->_values[$param] = $value;
@@ -160,6 +161,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function bindParam($column, &$variable, $type = null, $length = null, $driverData = null)
     {
         $column = $this->_paramMap[$column] ?? $column;
@@ -187,6 +189,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function closeCursor()
     {
         return true;
@@ -205,6 +208,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function columnCount()
     {
         return oci_num_fields($this->_sth);
@@ -213,6 +217,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function errorCode()
     {
         $error = oci_error($this->_sth);
@@ -228,6 +233,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function errorInfo()
     {
         return oci_error($this->_sth);
@@ -236,6 +242,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function execute($params = null)
     {
         if ($params) {
@@ -270,6 +277,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function fetch($fetchMode = null, $orientation = null, $offset = null)
     {
         $toLowercase = ($this->getAttribute(PDO::ATTR_CASE) == PDO::CASE_LOWER);
@@ -402,6 +410,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * {@inheritdoc}
      */
     //public function fetchAll(int $fetchMode = PDO::FETCH_DEFAULT, $className = null, $arguments = null): array
+    #[\ReturnTypeWillChange]
     public function fetchAll(int $fetchMode = PDO::FETCH_DEFAULT, mixed ...$arguments): array
     {
         $this->setFetchMode($fetchMode, ...$arguments);
@@ -426,6 +435,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function fetchColumn($columnIndex = 0)
     {
         $row = oci_fetch_array($this->_sth, OCI_NUM | OCI_RETURN_NULLS | OCI_RETURN_LOBS);
@@ -440,6 +450,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function rowCount()
     {
         if (is_resource($this->_sth)) {
@@ -455,6 +466,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * @param string $attribute Attribute id.
      * @return mixed The attribute value.
      */
+    #[\ReturnTypeWillChange]
     public function getAttribute($attribute)
     {
         return $this->_conn->getConfig((string)$attribute);
@@ -470,6 +482,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * @return bool TRUE on success or FALSE on failure.
      */
     //public function setFetchMode($fetchMode, $param = null, $arguments = [])
+    #[\ReturnTypeWillChange]
     public function setFetchMode(int $fetchMode, mixed ...$arguments)
     {
         $this->_defaultFetchMode = $fetchMode;

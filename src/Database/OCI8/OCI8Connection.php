@@ -120,6 +120,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function prepare($statement, $options = null)
     {
         return new OCI8Statement($this->dbh, $statement, $this);
@@ -128,6 +129,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
     {
         $args = func_get_args();
@@ -141,6 +143,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function quote($string, $type = \PDO::PARAM_STR)
     {
         if (is_int($string) || is_float($string)) {
@@ -154,6 +157,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function exec($statement)
     {
         $stmt = $this->prepare($statement);
@@ -186,6 +190,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function inTransaction()
     {
         return $this->executeMode === OCI_NO_AUTO_COMMIT;
@@ -194,6 +199,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function beginTransaction()
     {
         $this->executeMode = OCI_NO_AUTO_COMMIT;
@@ -204,6 +210,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function commit()
     {
         if (!oci_commit($this->dbh)) {
@@ -217,6 +224,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function rollBack()
     {
         if (!oci_rollback($this->dbh)) {
@@ -230,6 +238,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function errorCode()
     {
         $error = oci_error($this->dbh);
@@ -245,6 +254,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
+    #[\ReturnTypeWillChange]
     public function errorInfo()
     {
         return oci_error($this->dbh);
