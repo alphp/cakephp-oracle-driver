@@ -80,8 +80,6 @@ class OCI8Connection extends PDO
             } else {
                 $this->dbh = @oci_connect($username, $password, $dsn);
             }
-
-//            $this->dbh = @oci_connect($username, $password, $dsn, $charset, $sessionMode);
         }
 
         if (!$this->dbh) {
@@ -120,8 +118,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function prepare($statement, $options = null)
+    public function prepare($statement, $options = null): PDOStatement|false
     {
         return new OCI8Statement($this->dbh, $statement, $this);
     }
@@ -129,7 +126,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
+    //#[\ReturnTypeWillChange]
     public function query(string $query, ?int $fetchMode = null, mixed ...$fetchModeArgs): PDOStatement|false
     {
         $args = func_get_args();
@@ -143,8 +140,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function quote($string, $type = \PDO::PARAM_STR)
+    public function quote($string, $type = \PDO::PARAM_STR): string|false
     {
         if (is_int($string) || is_float($string)) {
             return $string;
@@ -157,8 +153,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function exec($statement)
+    public function exec($statement): int|false
     {
         $stmt = $this->prepare($statement);
         $stmt->execute();
@@ -190,8 +185,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function inTransaction()
+    public function inTransaction(): bool
     {
         return $this->executeMode === OCI_NO_AUTO_COMMIT;
     }
@@ -199,8 +193,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function beginTransaction()
+    public function beginTransaction(): bool
     {
         $this->executeMode = OCI_NO_AUTO_COMMIT;
 
@@ -210,8 +203,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function commit()
+    public function commit(): bool
     {
         if (!oci_commit($this->dbh)) {
             throw OCI8Exception::fromErrorInfo($this->errorInfo());
@@ -224,8 +216,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function rollBack()
+    public function rollBack(): bool
     {
         if (!oci_rollback($this->dbh)) {
             throw OCI8Exception::fromErrorInfo($this->errorInfo());
@@ -238,8 +229,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function errorCode()
+    public function errorCode(): ?string
     {
         $error = oci_error($this->dbh);
         if ($error !== false) {
@@ -254,8 +244,7 @@ class OCI8Connection extends PDO
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function errorInfo()
+    public function errorInfo(): array
     {
         return oci_error($this->dbh);
     }

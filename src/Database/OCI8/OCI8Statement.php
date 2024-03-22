@@ -150,8 +150,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function bindValue($param, $value, $type = null)
+    public function bindValue($param, $value, $type = null): bool
     {
         $this->_values[$param] = $value;
 
@@ -161,8 +160,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function bindParam($column, &$variable, $type = null, $length = null, $driverData = null)
+    public function bindParam($column, &$variable, $type = null, $length = null, $driverData = null): bool
     {
         $column = $this->_paramMap[$column] ?? $column;
 
@@ -189,8 +187,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function closeCursor()
+    public function closeCursor(): bool
     {
         return true;
     }
@@ -208,8 +205,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function columnCount()
+    public function columnCount(): int
     {
         return oci_num_fields($this->_sth);
     }
@@ -217,8 +213,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function errorCode()
+    public function errorCode(): ?string
     {
         $error = oci_error($this->_sth);
         if ($error !== false) {
@@ -233,8 +228,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function errorInfo()
+    public function errorInfo(): array
     {
         return oci_error($this->_sth);
     }
@@ -242,8 +236,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function execute($params = null)
+    public function execute($params = null): bool
     {
         if ($params) {
             $hasZeroIndex = array_key_exists(0, $params);
@@ -277,8 +270,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function fetch($fetchMode = null, $orientation = null, $offset = null)
+    public function fetch($fetchMode = null, $orientation = null, $offset = null): mixed
     {
         $toLowercase = ($this->getAttribute(PDO::ATTR_CASE) == PDO::CASE_LOWER);
         $nullToString = ($this->getAttribute(PDO::ATTR_ORACLE_NULLS) == PDO::NULL_TO_STRING);
@@ -435,8 +427,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function fetchColumn($columnIndex = 0)
+    public function fetchColumn($columnIndex = 0): mixed
     {
         $row = oci_fetch_array($this->_sth, OCI_NUM | OCI_RETURN_NULLS | OCI_RETURN_LOBS);
 
@@ -450,8 +441,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    #[\ReturnTypeWillChange]
-    public function rowCount()
+    public function rowCount(): int
     {
         if (is_resource($this->_sth)) {
             return oci_num_rows($this->_sth);
@@ -466,8 +456,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * @param string $attribute Attribute id.
      * @return mixed The attribute value.
      */
-    #[\ReturnTypeWillChange]
-    public function getAttribute($attribute)
+    public function getAttribute($attribute): mixed
     {
         return $this->_conn->getConfig((string)$attribute);
     }
@@ -482,7 +471,7 @@ class OCI8Statement extends \PDOStatement implements \IteratorAggregate
      * @return bool TRUE on success or FALSE on failure.
      */
     //public function setFetchMode($fetchMode, $param = null, $arguments = [])
-    #[\ReturnTypeWillChange]
+    //#[\ReturnTypeWillChange]
     public function setFetchMode(int $fetchMode, mixed ...$arguments)
     {
         $this->_defaultFetchMode = $fetchMode;
